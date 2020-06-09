@@ -29,6 +29,11 @@
             <artifactId>guava</artifactId>
             <version>29.0-jre</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>d3js</artifactId>
+            <version>3.5.17</version>
+        </dependency>
 
 
         <dependency>

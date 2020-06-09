@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JVM GC</title>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/style/jvm.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/scripts/common/snap.svg.js"></script>
+    <script src="/scripts/common/snap.plugin.js"></script>
+
+</head>
+<body>
+<div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="debug_alert" class="alert alert-success text-center" role="alert">
+                红黑树算法演示动画 red black tree
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-md-right">
+                <button id="run" type="button" class="btn btn-primary">运行</button>
+                <button id="debug" type="button" class="btn btn-warning">调试</button>
+                <button id="step" type="button" class="btn btn-success">下一步</button>
+                <button id="go" type="button" class="btn btn-info">继续</button>
+                <button id="pause" type="button" class="btn btn-secondary">暂停</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <svg id="paper" width="1200" height="1800">
+            </svg>
+        </div>
+    </div>
+</div>
+<script type="module" src="/scripts/common/utils.js"></script>
+<script type="module" src="/scripts/tree/red_black_tree.js"></script>
+</body>
+</html>
