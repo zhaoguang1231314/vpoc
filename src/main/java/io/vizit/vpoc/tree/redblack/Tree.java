@@ -1,14 +1,18 @@
 package io.vizit.vpoc.tree.redblack;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
+@NoArgsConstructor
 public class Tree<K extends Comparable, V> {
     private Node<K, V> root;
 
     public Tree<K, V> rotateLeft(Node<K, V> x) {
+        if (x == null) {
+            return this;
+        }
         Node<K, V> y = x.getRight();
         // y.left goes to x.right
         x.setRight(y.getLeft());
@@ -21,6 +25,9 @@ public class Tree<K extends Comparable, V> {
     }
 
     public Tree<K, V> rotateRight(Node<K, V> x) {
+        if (x == null) {
+            return this;
+        }
         Node<K, V> y = x.getLeft();
         // y.right goes to x.left
         x.setLeft(y.getRight());
@@ -69,7 +76,7 @@ public class Tree<K extends Comparable, V> {
     private Tree<K, V> insertFixup(Node<K, V> z) {
         while (z != null && !z.isRoot() && z.getParent().isRed()) {
             if (z.getParent().isLeftChild()) {
-                if (z.getUncle().isRed()) { // case 1: both parent and uncle is red
+                if (z.getUncle() != null && z.getUncle().isRed()) { // case 1: both parent and uncle is red
                     flipColor(z);
                     z = z.getGrandpa(); // fixup grandpa
                 } else { // case 2: uncle is black
@@ -80,7 +87,7 @@ public class Tree<K extends Comparable, V> {
                     rotateRight(z.getGrandpa());
                 }
             } else { // case 2
-                if (z.getUncle().isRed()) {
+                if (z.getUncle() != null && z.getUncle().isRed()) {
                     flipColor(z);
                     z = z.getGrandpa();
                 } else {
@@ -97,9 +104,15 @@ public class Tree<K extends Comparable, V> {
     }
 
     private void flipColor(Node<K, V> z) {
-        z.getParent().black();
-        z.getUncle().black();
-        z.getGrandpa().red();
+        if (z.getParent() != null) {
+            z.getParent().black();
+        }
+        if (z.getUncle() != null) {
+            z.getUncle().black();
+        }
+        if (z.getGrandpa() != null) {
+            z.getGrandpa().red();
+        }
     }
 
     private void setRoot(Node y) {

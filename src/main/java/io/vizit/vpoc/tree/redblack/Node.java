@@ -1,22 +1,17 @@
 package io.vizit.vpoc.tree.redblack;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.stereotype.Component;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
-@Component
 @Getter
 @Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Node<K extends Comparable, V> implements Comparable<Node<K, V>> {
     @EqualsAndHashCode.Include
     @NotNull
-    private K key;
+    private final K key;
     private V value;
     private boolean red = true;
     private Node<K, V> parent = null;
@@ -25,12 +20,16 @@ public class Node<K extends Comparable, V> implements Comparable<Node<K, V>> {
 
     public void setLeft(Node<K, V> left) {
         this.left = left;
-        this.left.parent = this;
+        if (this.left != null) {
+            this.left.parent = this;
+        }
     }
 
     public void setRight(Node<K, V> right) {
         this.right = right;
-        this.right.parent = this;
+        if (this.right != null) {
+            this.right.parent = this;
+        }
     }
 
     public boolean isRoot() {
@@ -60,7 +59,7 @@ public class Node<K extends Comparable, V> implements Comparable<Node<K, V>> {
 
     @Override
     public int compareTo(Node<K, V> o) {
-        return this.key.compareTo(o);
+        return this.key.compareTo(o.key);
     }
 
     public Node<K, V> getGrandpa() {
