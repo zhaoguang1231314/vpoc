@@ -6,19 +6,22 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
+
 @Component
 @Getter
 @Setter
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Node<K, V> {
+public class Node<K extends Comparable, V> implements Comparable<Node<K, V>> {
     @EqualsAndHashCode.Include
+    @NotNull
     private K key;
     private V value;
-    private Color color;
-    private Node<K, V> parent;
-    private Node<K, V> left;
-    private Node<K, V> right;
+    private Color color = Color.RED;
+    private Node<K, V> parent = null;
+    private Node<K, V> left = null;
+    private Node<K, V> right = null;
 
     public void setLeft(Node<K, V> left) {
         this.left = left;
@@ -42,5 +45,10 @@ public class Node<K, V> {
      */
     public boolean isLeftOf(Node parent) {
         return this == parent.getLeft();
+    }
+
+    @Override
+    public int compareTo(Node<K, V> o) {
+        return this.key.compareTo(o);
     }
 }
