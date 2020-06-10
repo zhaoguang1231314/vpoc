@@ -18,7 +18,7 @@ public class Node<K extends Comparable, V> implements Comparable<Node<K, V>> {
     @NotNull
     private K key;
     private V value;
-    private Color color = Color.RED;
+    private boolean red = true;
     private Node<K, V> parent = null;
     private Node<K, V> left = null;
     private Node<K, V> right = null;
@@ -38,13 +38,15 @@ public class Node<K extends Comparable, V> implements Comparable<Node<K, V>> {
     }
 
     /**
-     * check if parent is the left child of this node.
+     * check if it is the left child.
      *
-     * @param parent
      * @return
      */
-    public boolean isLeftOf(Node parent) {
-        return this == parent.getLeft();
+    public boolean isLeftChild() {
+        if (this.isRoot()) {
+            throw new RuntimeException("This is a root node.");
+        }
+        return this == this.parent.getLeft();
     }
 
     @Override

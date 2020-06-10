@@ -9,48 +9,27 @@ public class Tree<K extends Comparable, V> {
     private Node<K, V> root;
 
     public Tree<K, V> rotateLeft(Node<K, V> x) {
-        // hold xParent
-        Node<K, V> xParent = x.getParent();
-        // hold xRight
         Node<K, V> y = x.getRight();
-
         // y.left goes to x.right
         x.setRight(y.getLeft());
+        findPlace4Y((Node<K, V>) x, (Node<K, V>) y);
 
         // x goes to y's left
         y.setLeft(x);
 
-        // find place for y: y replace x's old place
-        if (x.isRoot()) {
-            this.setRoot(y); // y becomes root
-        } else if (x.isLeftOf(xParent)) {
-            xParent.setLeft(y);
-        } else {
-            xParent.setRight(y);
-        }
         return this;
     }
 
     public Tree<K, V> rotateRight(Node<K, V> x) {
-        // hold xParent
-        Node<K, V> xParent = x.getParent();
-        // hold xRight
         Node<K, V> y = x.getLeft();
-
-        // y.left goes to x.right
+        // y.right goes to x.left
         x.setLeft(y.getRight());
 
-        // x goes to y's left
-        y.setRight(x);
-
         // find place for y: y replace x's old place
-        if (x.isRoot()) {
-            this.setRoot(y); // y becomes root
-        } else if (x.isLeftOf(xParent)) {
-            xParent.setLeft(y);
-        } else {
-            xParent.setRight(y);
-        }
+        findPlace4Y(x, y);
+
+        // x goes to y's right
+        y.setRight(x);
         return this;
     }
 
@@ -73,8 +52,27 @@ public class Tree<K extends Comparable, V> {
         } else {
             y.setRight(z);
         }
+        return insertFixup(z);
+    }
 
+    private void findPlace4Y(Node<K, V> x, Node<K, V> y) {
+        Node<K, V> xParent = x.getParent();
+        if (x.isRoot()) {
+            this.setRoot(y); // y becomes root
+        } else if (x.isLeftChild()) {
+            xParent.setLeft(y);
+        } else {
+            xParent.setRight(y);
+        }
+    }
 
+    private Tree<K, V> insertFixup(Node<K, V> z) {
+        while(z.isRed()) {
+            Node<K, V> zParent = z.getParent();
+            if (z.isLeftChild()) {
+
+            }
+        }
 
         return this;
     }
