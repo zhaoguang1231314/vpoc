@@ -49,8 +49,36 @@ public class Node<K extends Comparable, V> implements Comparable<Node<K, V>> {
         return this == this.parent.getLeft();
     }
 
+    /**
+     * check if it is the right child.
+     *
+     * @return
+     */
+    public boolean isRightChild() {
+        return !this.isLeftChild();
+    }
+
     @Override
     public int compareTo(Node<K, V> o) {
         return this.key.compareTo(o);
+    }
+
+    public Node<K, V> getGrandpa() {
+        return this.getParent().getParent();
+    }
+
+    public Node<K, V> getUncle() {
+        if (this.isLeftChild()) {
+            return this.getParent().getRight();
+        }
+        return this.getParent().getLeft();
+    }
+
+    public void black() {
+        this.setRed(false);
+    }
+
+    public void red() {
+        this.setRed(true);
     }
 }

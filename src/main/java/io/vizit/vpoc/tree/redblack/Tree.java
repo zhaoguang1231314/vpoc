@@ -67,16 +67,40 @@ public class Tree<K extends Comparable, V> {
     }
 
     private Tree<K, V> insertFixup(Node<K, V> z) {
-        while(z.isRed()) {
-            Node<K, V> zParent = z.getParent();
-            if (z.isLeftChild()) {
-
+        while (z != null && !z.isRoot() && z.getParent().isRed()) {
+            if (z.getParent().isLeftChild()) {
+                if (z.getUncle().isRed()) { // case 1: both parent and uncle is red
+                    flipColor(z);
+                    z = z.getGrandpa(); // fixup grandpa
+                } else { // case 2: uncle is black
+                    if (z.isRightChild()) {
+                        rotateLeft(z.getParent()); // rotate z's parent left
+                    }
+                    flipColor(z);
+                    rotateRight(z.getGrandpa());
+                }
+            } else { // case 2
+                if (z.getUncle().isRed()) {
+                    flipColor(z);
+                    z = z.getGrandpa();
+                } else {
+                    if (z.isLeftChild()) {
+                        rotateRight(z.getParent());
+                    }
+                    flipColor(z);
+                    rotateLeft(z.getGrandpa());
+                }
             }
         }
-
+        this.root.black();
         return this;
     }
 
+    private void flipColor(Node<K, V> z) {
+        z.getParent().black();
+        z.getUncle().black();
+        z.getGrandpa().red();
+    }
 
     private void setRoot(Node y) {
         this.root = y;
