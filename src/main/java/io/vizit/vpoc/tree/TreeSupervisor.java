@@ -1,9 +1,11 @@
 package io.vizit.vpoc.tree;
 
+import io.vizit.vpoc.tree.api.InsertRequest;
 import lombok.Setter;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -20,5 +22,21 @@ public class TreeSupervisor {
 
     public TreeSupervisor(SimpMessageSendingOperations messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
+    }
+
+    public List<Integer> insert(InsertRequest request) {
+        this.setDelay(request.getDelay());
+        this.setDebug(request.isDebug());
+        report(TOPIC_INSERT, request.getNodes());
+        return request.getNodes();
+    }
+
+    private void report(String topic, Object object) {
+        try {
+            Thread.sleep(delay);
+            messagingTemplate.convertAndSend(topic, object);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -1,6 +1,5 @@
 package io.vizit.vpoc.tree.api;
 
-import io.vizit.vpoc.tree.redblack.Node;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InsertRequest {
-    private List<Node> nodes;
+    private List<Integer> nodes;
     private int count = 1;
     private int delay = 100; // ms
     private boolean reset = false;
