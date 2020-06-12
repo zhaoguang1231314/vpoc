@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <title>JVM GC</title>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/style/jvm.css" rel="stylesheet">
+    <link href="/style/tree.css" rel="stylesheet">
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/scripts/common/snap.svg.js"></script>
     <script src="/scripts/common/snap.plugin.js"></script>
+    <script src="/scripts/common/d3.v5.min.js"></script>
 
 </head>
 <body>
@@ -41,6 +42,8 @@
     </div>
 </div>
 <script type="module" src="/scripts/common/utils.js"></script>
+<script type="module" src="/scripts/tree/controller.js"></script>
+<script type="module" src="/scripts/tree/paper.js"></script>
 <script type="module" src="/scripts/tree/red_black_tree.js"></script>
 </body>
 </html>
