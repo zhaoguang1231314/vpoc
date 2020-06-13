@@ -11,18 +11,17 @@
 <p>Click on this text to update the chart with new data values (once).</p>
 
 <script type="text/javascript">
-    var dataset = [5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
-        11, 12, 15, 20, 18, 17, 16, 18, 23, 25];
+    var dataset = [5, 10, 13, 19, 21, 25, 22, 18, 15, 13];
     var w = 600;
-    var h = 500;
-    var padding = 50;
+    var h = 600;
+    var padding = 100;
     //Create SVG element
     var svg = d3.select("body")
         .append("svg")
-        .attr("width", w + padding)
-        .attr("height", h + padding)
+        .attr("width", 800)
+        .attr("height", 800)
         .append("g")
-        .attr("transform", `translate(${padding}, ${0})`);
+        .attr("transform", `translate(${padding}, ${padding})`);
 
     var xScale = d3.scaleBand()
         .domain(d3.range(dataset.length))
@@ -30,28 +29,28 @@
         .round(true)  // <-- Enable rounding
         // .rangeRound([0, w])  // <-- Also enables rounding
         .paddingInner(0.05);
-    var xAxis = d3.axisBottom()
-        .scale(xScale)
-        .ticks(5);  //Set rough # of ticks
+    // var xAxis = d3.axisBottom()
+    //     .scale(xScale);
+    // .ticks(5);  //Set rough # of ticks
     // .tickValues([0, 100, 250, 600]);
     // .tickFormat(formatAsPercentage);
-    svg.append("g")
-        .attr("class", "axis")
-        .attr("transform", "translate(0," + h + ")")
-        .call(xAxis);
+    // svg.append("g")
+    //     .attr("class", "axis")
+    //     .attr("transform", "translate(0," + h + ")")
+    //     .call(xAxis);
 
     var yScale = d3.scaleLinear()
         .domain([0, d3.max(dataset)])
-        .range([h, 0])
+        .range([0, h])
         .nice();
     //Define Y axis
-    var yAxis = d3.axisLeft()
-        .scale(yScale)
-        .ticks(5);
-    svg.append("g")
-        .attr("class", "axis")
-        .attr("transform", "translate(" + 0 + ",0)")
-        .call(yAxis);
+    // var yAxis = d3.axisLeft()
+    //     .scale(yScale);
+    // .ticks(5);
+    // svg.append("g")
+    //     .attr("class", "axis")
+    //     .attr("transform", "translate(" + 0 + ",0)")
+    //     .call(yAxis);
 
     //Create bars
     svg.selectAll("rect")
@@ -61,12 +60,25 @@
         .attr("x", function (d, i) {
             return xScale(i);  // <-- Set x values
         })
-        .attr("y", d => h - d * 4)
+        .attr("y", d => h - yScale(d))
         .attr("width", xScale.bandwidth())
-        .attr("height", d => d * 4)
+        .attr("height", d => yScale(d))
         .attr("fill", function (d) {
             return "rgb(0, 0, " + Math.round(d * 10) + ")";
         });
+
+    svg.selectAll("text")
+        .data(dataset)
+        .enter()
+        .append('text')
+        .attr("x", function (d, i) {
+            return xScale(i) + xScale.bandwidth() / 2;
+        })
+        .attr("y", function (d) {
+            return h - yScale(d) - 10;
+        })
+        .attr("text-anchor", "middle")
+        .text(d => d);
 
     d3.select("p")
         .on("click", function () {
@@ -101,17 +113,33 @@
                     return "rgb(0, 0, " + Math.round(d * 10) + ")";
                 });
 
-            //Update x-axis
-            svg.select(".x.axis")
+            svg.selectAll("text")
+                .data(dataset)
                 .transition()
+                .delay(function (d, i) {
+                    return i / dataset.length * 1000;   // <-- Where the magic happens
+                })
                 .duration(1000)
-                .call(xAxis);
+                .attr("x", function (d, i) {
+                    return xScale(i) + xScale.bandwidth() / 2;
+                })
+                .attr("y", function (d) {
+                    return h - yScale(d) - 10;
+                })
+                .attr("text-anchor", "middle")
+                .text(d => d);
 
-//Update y-axis
-            svg.select(".y.axis")
-                .transition()
-                .duration(1000)
-                .call(yAxis);
+//             //Update x-axis
+//             svg.select(".x.axis")
+//                 .transition()
+//                 .duration(1000)
+//                 .call(xAxis);
+//
+// //Update y-axis
+//             svg.select(".y.axis")
+//                 .transition()
+//                 .duration(1000)
+//                 .call(yAxis);
         });
 </script>
 </body>
