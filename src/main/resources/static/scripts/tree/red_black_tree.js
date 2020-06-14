@@ -1,4 +1,4 @@
-import {init, update} from "./paper-force.js";
+import {init, update} from "./paper.js";
 import {run, action} from "./controller.js";
 
 let stompClient = null;
