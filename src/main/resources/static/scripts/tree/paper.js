@@ -3,6 +3,8 @@ let margin = {top: 100, right: 90, bottom: 50, left: 90},
     width = 960 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
 let colors = d3.scaleOrdinal(d3.schemeCategory10);
+// declares a tree layout and assigns the size
+let tree = d3.tree().size([width, height]);
 
 function init_paper() {
     let svg = d3.select("#paper")
@@ -13,63 +15,57 @@ function init_paper() {
     return paper;
 }
 
+let key = function (d) {
+    return d.key;
+};
 
 export function init() {
     let paper = init_paper();
 
     d3.json("data/tree.json").then(function (tree_data) {
-            let root = d3.hierarchy(tree_data);
-            let links = root.links();
-            let nodes = root.descendants();
+//  assigns the data to a hierarchy using parent-child relationships
+            let nodes = d3.hierarchy(tree_data);
+// maps the node data to the tree layout
+            nodes = tree(nodes);
 
-            let simulation = d3.forceSimulation(nodes)
-                .force("link", d3.forceLink(links).id(d => d.id).distance(100).strength(1))
-                .force("charge", d3.forceManyBody().strength(-50))
-                .force("x", d3.forceX())
-                .force("y", d3.forceY());
-
-            //Create nodes as circles
-            let circles = paper.selectAll("circle")
-                .data(nodes)
-                .enter()
-                .append("circle")
-                .attr("r", 10)
-                .style("fill", function (d, i) {
-                    return colors(i);
+// adds the links between the nodes
+            var link = paper.selectAll(".link")
+                .data(nodes.descendants().slice(1))
+                .enter().append("path")
+                .attr("class", "link")
+                .attr("d", function (d) {
+                    return "M" + d.x + "," + d.y
+                        + "C" + d.x + "," + (d.y + d.parent.y) / 2
+                        + " " + d.parent.x + "," + (d.y + d.parent.y) / 2
+                        + " " + d.parent.x + "," + d.parent.y;
                 });
 
-            //Create edges as lines
-            let edges = paper.selectAll("line")
-                .data(links)
-                .enter()
-                .append("line")
-                .style("stroke", "#ccc")
-                .style("stroke-width", 1);
-
-            //Every time the simulation "ticks", this will be called
-            simulation.on("tick", function () {
-
-                edges.attr("x1", function (d) {
-                    return d.source.x;
+// adds each node as a group
+            var node = paper.selectAll(".node")
+                .data(nodes.descendants())
+                .enter().append("g")
+                .attr("class", function (d) {
+                    return "node" +
+                        (d.children ? " node--internal" : " node--leaf");
                 })
-                    .attr("y1", function (d) {
-                        return d.source.y;
-                    })
-                    .attr("x2", function (d) {
-                        return d.target.x;
-                    })
-                    .attr("y2", function (d) {
-                        return d.target.y;
-                    });
+                .attr("transform", function (d) {
+                    return "translate(" + d.x + "," + d.y + ")";
+                });
 
-                circles.attr("cx", function (d) {
-                    return d.x;
+// adds the circle to the node
+            node.append("circle")
+                .attr("r", 10);
+
+// adds the text to the node
+            node.append("text")
+                .attr("dy", ".35em")
+                .attr("y", function (d) {
+                    return d.children ? -20 : 20;
                 })
-                    .attr("cy", function (d) {
-                        return d.y;
-                    });
-
-            });
+                .style("text-anchor", "middle")
+                .text(function (d) {
+                    return d.data.key;
+                });
         }
     );
 
@@ -79,6 +75,70 @@ export function init() {
 
 export function update(paper) {
     d3.json("data/tree_update.json").then(function (tree_data) {
+            //  assigns the data to a hierarchy using parent-child relationships
+            let nodes = d3.hierarchy(tree_data);
+// maps the node data to the tree layout
+            nodes = tree(nodes);
+// adds the links between the nodes
+            let link = paper.selectAll(".link")
+                .data(nodes.descendants().slice(1))
+                .attr("d", function (d) {
+                    return "M" + d.x + "," + d.y
+                        + "C" + d.x + "," + (d.y + d.parent.y) / 2
+                        + " " + d.parent.x + "," + (d.y + d.parent.y) / 2
+                        + " " + d.parent.x + "," + d.parent.y;
+                });
+
+            let new_link = link.enter().append("path")
+                .attr("class", "link")
+                .attr("d", function (d) {
+                    return "M" + d.x + "," + d.y
+                        + "C" + d.x + "," + (d.y + d.parent.y) / 2
+                        + " " + d.parent.x + "," + (d.y + d.parent.y) / 2
+                        + " " + d.parent.x + "," + d.parent.y;
+                })
+                .merge(link)
+                .transition()
+                .duration(1000);
+            link.exit().remove();
+
+// adds each node as a group
+            let node = paper.selectAll(".node")
+                .data(nodes.descendants())
+                .attr("transform", function (d) {
+                    return "translate(" + d.x + "," + d.y + ")";
+                });
+
+            let new_node = node.enter().append("g")
+                .attr("class", function (d) {
+                    return "node" +
+                        (d.children ? " node--internal" : " node--leaf");
+                })
+                .attr("transform", function (d) {
+                    return "translate(" + d.x + "," + d.y + ")";
+                })
+
+
+// adds the circle to the node
+            new_node.append("circle")
+                .attr("r", 10);
+
+// adds the text to the node
+            new_node.append("text")
+                .attr("dy", ".35em")
+                .attr("y", function (d) {
+                    return d.children ? -20 : 20;
+                })
+                .style("text-anchor", "middle")
+                .text(function (d) {
+                    return d.data.key;
+                });
+
+            new_node.merge(node)
+                .transition()
+                .duration(1000);
+
+            node.exit().remove();
         }
     );
 }

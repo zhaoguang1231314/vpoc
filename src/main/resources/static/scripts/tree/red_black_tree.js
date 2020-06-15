@@ -31,7 +31,7 @@ $(function () {
     connect();
     let paper = init();
     // $("#run").click(run.bind(null, false));
-    // $("#run").click(update.bind(null, paper));
+    $("#run").click(update.bind(null, paper));
     $("#debug").click(run.bind(null, true));
 
     $("#go").click(action.bind(null, 'go'));

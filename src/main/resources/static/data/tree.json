@@ -1,13 +1,24 @@
 {
-  "name": "Top Level",
+  "key": "10",
   "children": [
     {
-      "name": "Level 2: A",
+      "key": "6",
       "children": [
-        {"name": "Son of A"},
-        {"name": "Daughter of A"}
+        {
+          "key": "3"
+        },
+        {
+          "key": "8"
+        }
       ]
     },
-    {"name": "Level 2: B"}
+    {
+      "key": "12",
+      "children": [
+        {
+          "key": "11"
+        }
+      ]
+    }
   ]
 }
