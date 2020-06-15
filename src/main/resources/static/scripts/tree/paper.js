@@ -16,7 +16,7 @@ function init_paper() {
 }
 
 let key = function (d) {
-    return d.key;
+    return d.data.key;
 };
 
 export function init() {
@@ -42,7 +42,7 @@ export function init() {
 
 // adds each node as a group
             var node = paper.selectAll(".node")
-                .data(nodes.descendants())
+                .data(nodes.descendants(), key)
                 .enter().append("g")
                 .attr("class", function (d) {
                     return "node" +
@@ -75,19 +75,10 @@ export function init() {
 
 export function update(paper) {
     d3.json("data/tree_update.json").then(function (tree_data) {
-            //  assigns the data to a hierarchy using parent-child relationships
             let nodes = d3.hierarchy(tree_data);
-// maps the node data to the tree layout
             nodes = tree(nodes);
-// adds the links between the nodes
             let link = paper.selectAll(".link")
-                .data(nodes.descendants().slice(1))
-                .attr("d", function (d) {
-                    return "M" + d.x + "," + d.y
-                        + "C" + d.x + "," + (d.y + d.parent.y) / 2
-                        + " " + d.parent.x + "," + (d.y + d.parent.y) / 2
-                        + " " + d.parent.x + "," + d.parent.y;
-                });
+                .data(nodes.descendants().slice(1));
 
             let new_link = link.enter().append("path")
                 .attr("class", "link")
@@ -99,15 +90,18 @@ export function update(paper) {
                 })
                 .merge(link)
                 .transition()
-                .duration(1000);
+                .duration(1000)
+                .attr("d", function (d) {
+                    return "M" + d.x + "," + d.y
+                        + "C" + d.x + "," + (d.y + d.parent.y) / 2
+                        + " " + d.parent.x + "," + (d.y + d.parent.y) / 2
+                        + " " + d.parent.x + "," + d.parent.y;
+                });
             link.exit().remove();
 
 // adds each node as a group
             let node = paper.selectAll(".node")
-                .data(nodes.descendants())
-                .attr("transform", function (d) {
-                    return "translate(" + d.x + "," + d.y + ")";
-                });
+                .data(nodes.descendants(), key);
 
             let new_node = node.enter().append("g")
                 .attr("class", function (d) {
@@ -136,7 +130,10 @@ export function update(paper) {
 
             new_node.merge(node)
                 .transition()
-                .duration(1000);
+                .duration(1000)
+                .attr("transform", function (d) {
+                    return "translate(" + d.x + "," + d.y + ")";
+                });
 
             node.exit().remove();
         }
