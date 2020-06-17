@@ -8,33 +8,54 @@ const Region = Object.freeze({
 });
 
 let treeData = {
-    "size": "90",
-    "children": [
-        {
-            "size": "30",
-            "children": [
-                {
-                    "size": "5"
-                },
-                {
-                    "size": "5"
-                },
-                {
-                    "size": "5"
-                }
-            ]
-        }
-    ]
+    key: 625,
+    index: 0,
+    children: []
 };
+
+for (let i = 0; i < 25; i++) {
+    let region = {
+        key: i * 10,
+        index: i
+    }
+    treeData.children.push(region);
+}
 
 // set the dimensions and margins of the diagram
 var margin = {top: 40, right: 90, bottom: 50, left: 90},
-    width = 660 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 900 - margin.left - margin.right,
+    height = 900 - margin.top - margin.bottom;
 
-// declares a tree layout and assigns the size
-var treemap = d3.tree()
-    .size([width, height]);
+let object_length = 30;
+let region_length = object_length * 5;
+let heap_length = region_length * 5;
+
+function treemap(root) {
+    if (root.depth == 0) { // heap
+        root.x = 0;
+        root.y = 0;
+        root.length = heap_length;
+    }
+    if (root.depth == 1) { // region
+        root.x = root.data.index % 5 * region_length;
+        root.y = Math.floor(root.data.index / 5) * region_length;
+        root.length = region_length;
+    }
+    if (root.depth == 2) { // object
+        root.x = root.data.index % 5 * object_length;
+        root.y = Math.floor(root.data.index / 5) * object_length;
+        root.length = object_length;
+    }
+    if (root.depth > 2) { // object
+        console.log("should not be here");
+        return root;
+    }
+    if (root.children == null) {
+        return root;
+    }
+    root.children.forEach(child => treemap(child));
+    return root;
+}
 
 //  assigns the data to a hierarchy using parent-child relationships
 var hierarchy = d3.hierarchy(treeData);
@@ -54,41 +75,40 @@ var svg = d3.select("#paper")
 
 // adds each node as a group
 var node = g.selectAll(".node")
-    .data(nodes.descendants())
+    .data(nodes.children)
     .enter().append("g")
     .attr("class", function (d) {
         return "node" +
             (d.children ? " node--internal" : " node--leaf");
-    })
-    .attr("transform", function (d) {
-        return "translate(" + 300 + "," + 100 + ")";
     });
-let tree_height = g.select(".node").data()[0].height;
+// .attr("transform", function (d) {
+//     return "translate(" + 300 + "," + 100 + ")";
+// });
 
 // adds the circle to the node
 node.append("rect")
     .attr("x", d => {
-        return -d.x
+        return d.x
     })
     .attr("y", d => {
-        return 0;
+        return d.y;
     })
     .attr("width", d => {
-        return d.x * 2
+        return d.length;
     })
     .attr("height", d => {
-        return height * d.height / tree_height;
+        return d.length;
     })
     .attr("fill", "none")
     .attr("stroke", "blue");
 
-// adds the text to the node
-node.append("text")
-    .attr("dy", ".35em")
-    .attr("y", function (d) {
-        return d.children ? -20 : 20;
-    })
-    .style("text-anchor", "middle")
-    .text(function (d) {
-        return d.data.size;
-    });
+// // adds the text to the node
+// node.append("text")
+//     .attr("dy", ".35em")
+//     .attr("y", function (d) {
+//         return d.children ? -20 : 20;
+//     })
+//     .style("text-anchor", "middle")
+//     .text(function (d) {
+//         return d.data.key;
+//     });
