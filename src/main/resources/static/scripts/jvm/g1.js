@@ -14,9 +14,16 @@ let treeData = {
 };
 
 for (let i = 0; i < 25; i++) {
-    let region = {
-        key: i * 10,
+    let object = {
+        key: i,
         index: i
+    };
+    let region = {
+        key: i,
+        index: i,
+        children: [
+            object
+        ]
     }
     treeData.children.push(region);
 }
@@ -30,7 +37,9 @@ let object_length = 30;
 let region_length = object_length * 5;
 let heap_length = region_length * 5;
 
+let objects = []
 function treemap(root) {
+    objects.push(root);
     if (root.depth == 0) { // heap
         root.x = 0;
         root.y = 0;
@@ -42,8 +51,8 @@ function treemap(root) {
         root.length = region_length;
     }
     if (root.depth == 2) { // object
-        root.x = root.data.index % 5 * object_length;
-        root.y = Math.floor(root.data.index / 5) * object_length;
+        root.x = root.parent.x + root.data.index % 5 * object_length;
+        root.y = root.parent.y + Math.floor(root.data.index / 5) * object_length;
         root.length = object_length;
     }
     if (root.depth > 2) { // object
@@ -57,15 +66,9 @@ function treemap(root) {
     return root;
 }
 
-//  assigns the data to a hierarchy using parent-child relationships
 var hierarchy = d3.hierarchy(treeData);
-
-// maps the node data to the tree layout
 let nodes = treemap(hierarchy);
 
-// append the svg obgect to the body of the page
-// appends a 'group' element to 'svg'
-// moves the 'group' element to the top left margin
 var svg = d3.select("#paper")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom),
@@ -75,18 +78,9 @@ var svg = d3.select("#paper")
 
 // adds each node as a group
 var node = g.selectAll(".node")
-    .data(nodes.children)
-    .enter().append("g")
-    .attr("class", function (d) {
-        return "node" +
-            (d.children ? " node--internal" : " node--leaf");
-    });
-// .attr("transform", function (d) {
-//     return "translate(" + 300 + "," + 100 + ")";
-// });
-
-// adds the circle to the node
-node.append("rect")
+    .data(objects)
+    .enter()
+    .append("rect")
     .attr("x", d => {
         return d.x
     })
@@ -101,6 +95,10 @@ node.append("rect")
     })
     .attr("fill", "none")
     .attr("stroke", "blue");
+
+// .attr("transform", function (d) {
+//     return "translate(" + 300 + "," + 100 + ")";
+// });
 
 // // adds the text to the node
 // node.append("text")
