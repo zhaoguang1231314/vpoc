@@ -37,10 +37,10 @@ var treemap = d3.tree()
     .size([width, height]);
 
 //  assigns the data to a hierarchy using parent-child relationships
-var nodes = d3.hierarchy(treeData);
+var hierarchy = d3.hierarchy(treeData);
 
 // maps the node data to the tree layout
-nodes = treemap(nodes);
+let nodes = treemap(hierarchy);
 
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
@@ -52,35 +52,43 @@ var svg = d3.select("#paper")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-// adds the links between the nodes
-var link = g.selectAll(".link")
-    .data( nodes.descendants().slice(1))
-    .enter().append("path")
-    .attr("class", "link")
-    .attr("d", function(d) {
-        return "M" + d.x + "," + d.y
-            + "C" + d.x + "," + (d.y + d.parent.y) / 2
-            + " " + d.parent.x + "," +  (d.y + d.parent.y) / 2
-            + " " + d.parent.x + "," + d.parent.y;
-    });
-
 // adds each node as a group
 var node = g.selectAll(".node")
     .data(nodes.descendants())
     .enter().append("g")
-    .attr("class", function(d) {
+    .attr("class", function (d) {
         return "node" +
-            (d.children ? " node--internal" : " node--leaf"); })
-    .attr("transform", function(d) {
-        return "translate(" + d.x + "," + d.y + ")"; });
+            (d.children ? " node--internal" : " node--leaf");
+    })
+    .attr("transform", function (d) {
+        return "translate(" + 300 + "," + 100 + ")";
+    });
+let tree_height = g.select(".node").data()[0].height;
 
 // adds the circle to the node
-node.append("circle")
-    .attr("r", 10);
+node.append("rect")
+    .attr("x", d => {
+        return -d.x
+    })
+    .attr("y", d => {
+        return 0;
+    })
+    .attr("width", d => {
+        return d.x * 2
+    })
+    .attr("height", d => {
+        return height * d.height / tree_height;
+    })
+    .attr("fill", "none")
+    .attr("stroke", "blue");
 
 // adds the text to the node
 node.append("text")
     .attr("dy", ".35em")
-    .attr("y", function(d) { return d.children ? -20 : 20; })
+    .attr("y", function (d) {
+        return d.children ? -20 : 20;
+    })
     .style("text-anchor", "middle")
-    .text(function(d) { return d.data.size; });
+    .text(function (d) {
+        return d.data.size;
+    });
