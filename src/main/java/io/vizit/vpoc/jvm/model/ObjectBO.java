@@ -4,7 +4,6 @@ import lombok.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ObjectBO implements Cloneable {
@@ -13,6 +12,14 @@ public class ObjectBO implements Cloneable {
     private int size;
     private long address;
     private int age;
+    private Region region;
+
+    public ObjectBO(long id, int size, long address, int age) {
+        this.id = id;
+        this.size = size;
+        this.address = address;
+        this.age = age;
+    }
 
     @Override
     protected Object clone() {
