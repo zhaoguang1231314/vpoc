@@ -1,8 +1,10 @@
 package io.vizit.vpoc.jvm.api;
 
 import io.vizit.vpoc.jvm.GcSupervisor;
+import io.vizit.vpoc.jvm.model.HeapChoice;
 import io.vizit.vpoc.jvm.model.Heap;
 import io.vizit.vpoc.jvm.model.ObjectBO;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,14 +15,23 @@ import java.util.concurrent.ThreadLocalRandom;
 @RestController
 @RequestMapping(value = "/jvm/gc")
 public class GcController {
-    private final Heap heap;
+    private HeapChoice heapChoice = HeapChoice.G1;
+    private Heap heap;
+    private final Heap g1Heap;
+    private final Heap generationalHeap;
     private final GcSupervisor gcSupervisor;
     private final SimpMessageSendingOperations messagingTemplate;
 
-    public GcController(SimpMessageSendingOperations messagingTemplate, Heap heap, GcSupervisor gcSupervisor) {
+    public GcController(@Qualifier("G1Heap") Heap g1Heap, @Qualifier("GenerationalHeap") Heap generationalHeap, SimpMessageSendingOperations messagingTemplate, GcSupervisor gcSupervisor) {
+        this.g1Heap = g1Heap;
+        this.generationalHeap = generationalHeap;
         this.messagingTemplate = messagingTemplate;
-        this.heap = heap;
         this.gcSupervisor = gcSupervisor;
+        if (heapChoice == HeapChoice.G1) {
+            this.heap = this.g1Heap;
+        } else {
+            this.heap = this.generationalHeap;
+        }
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)

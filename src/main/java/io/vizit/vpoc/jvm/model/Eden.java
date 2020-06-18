@@ -2,6 +2,7 @@ package io.vizit.vpoc.jvm.model;
 
 import io.vizit.vpoc.jvm.GcSupervisor;
 import lombok.Getter;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 @Component
+@Scope("prototype")
 public class Eden {
     private int capacity = JvmConfig.getEdenSize();
     private AtomicInteger allocatedPointer = new AtomicInteger(0);
