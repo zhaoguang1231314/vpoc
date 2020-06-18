@@ -1,4 +1,4 @@
-import {treemap} from "./g1_util.js";
+import {treemap, position, object_length} from "./g1_util.js";
 
 const Region = Object.freeze({
     EDEN: Symbol("eden"),
@@ -21,6 +21,19 @@ export function gc() {
 
 }
 
+export function allocate(obj) {
+    let region = d3.select('#region-' + obj.region.id);
+    let {x, y} = position(region, obj.address);
+    g.append("rect")
+        .attr("id", 'obj-' + obj.id)
+        .attr("x", x)
+        .attr("y", y)
+        .attr("width", object_length)
+        .attr("height", object_length)
+        .attr("fill", color(Math.floor(Math.random() * 10)))
+        .attr("stroke", "blue");
+}
+
 export function init_heap() {
 // set the dimensions and margins of the diagram
     let treeData = {
@@ -41,10 +54,13 @@ export function init_heap() {
     let hierarchy = d3.hierarchy(treeData);
     let root = treemap(hierarchy);
 
-    var node = g.selectAll(".node")
+    g.selectAll(".region")
         .data(root.decendents)
         .enter()
         .append("rect")
+        .attr("id", d => {
+            return 'region-' + d.id
+        })
         .attr("x", d => {
             return d.x
         })

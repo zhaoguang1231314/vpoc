@@ -1,7 +1,13 @@
-let object_length = 30;
+export let object_length = 30;
 let region_length = object_length * 5;
 let heap_length = region_length * 5;
 
+export function position(region, index) {
+    return {
+        x: region.data()[0].x + index % 5 * object_length,
+        y: region.data()[0].y + Math.floor(index / 5) * object_length
+    }
+}
 export function treemap(root) {
     if (root.depth == 0) { // heap
         root.x = 0;
@@ -9,13 +15,16 @@ export function treemap(root) {
         root.length = heap_length;
     }
     if (root.depth == 1) { // region
-        root.x = root.data.index % 5 * region_length;
-        root.y = Math.floor(root.data.index / 5) * region_length;
+        let index = root.data.index;
+        root.x = index % 5 * region_length;
+        root.y = Math.floor(index / 5) * region_length;
         root.length = region_length;
+        root.id = index;
     }
     if (root.depth == 2) { // object
-        root.x = root.parent.x + root.data.index % 5 * object_length;
-        root.y = root.parent.y + Math.floor(root.data.index / 5) * object_length;
+        let index = root.data.index;
+        root.x = root.parent.x + index % 5 * object_length;
+        root.y = root.parent.y + Math.floor(index / 5) * object_length;
         root.length = object_length;
     }
     if (root.depth > 2) { // object
