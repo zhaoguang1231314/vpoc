@@ -20,13 +20,22 @@ export function gc() {
 export function allocate(obj) {
     let region = d3.select('#region-' + obj.region.id);
     let {x, y} = position(region, obj.address);
-    g.append("circle")
-        .attr("id", 'obj-' + obj.id)
-        .attr("cx", x + object_length / 2)
-        .attr("cy", y + object_length / 2)
+    let obj_g = g.append('g')
+        .attr("transform",
+            "translate(" + (x + object_length / 2) + "," + (y + object_length / 2) + ")")
+        .attr("id", 'obj-' + obj.id);
+    obj_g.append("circle")
+        .attr("cx", 0)
+        .attr("cy", 0)
         .attr("r", object_length / 2)
         .attr("fill", colorCategory10(Math.floor(Math.random() * 10)))
         .attr("stroke", "blue");
+    // obj_g.append("text")
+    //     .attr("x", object_length / 2)
+    //     .attr("y", object_length / 2)
+    //     .text(obj.id)
+    //     .attr("stroke", "blue");
+
 }
 
 export function init_heap() {
@@ -53,6 +62,7 @@ export function init_heap() {
         .data(root.decendents)
         .enter()
         .append("rect")
+        .classed('region', true)
         .attr("id", d => {
             return 'region-' + d.id
         })
@@ -100,6 +110,7 @@ export function init_heap() {
         .attr("y", d => {
             return d.y + d.length / 2;
         })
+        .classed('region_label', true)
         .style("text-anchor", "middle")
         .text(function (d) {
             let i = d.id;

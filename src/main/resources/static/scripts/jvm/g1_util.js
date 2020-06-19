@@ -1,4 +1,4 @@
-export let object_length = 30;
+export let object_length = 32;
 let region_length = object_length * 5;
 let heap_length = region_length * 5;
 
