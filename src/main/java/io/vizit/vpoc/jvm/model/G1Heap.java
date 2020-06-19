@@ -14,7 +14,7 @@ import static io.vizit.vpoc.config.ApplicationContextProvider.getBeanList;
 @Setter
 @Component("G1Heap")
 public class G1Heap implements Heap {
-    private int regionCount = 25;
+    private int regionCount = 25; // 2 + 16 + 36 = 54
     private AtomicLong sequence = new AtomicLong(1);
     private List<Region> regionList;
     private final GcSupervisor gcSupervisor;
@@ -22,7 +22,19 @@ public class G1Heap implements Heap {
     public G1Heap(GcSupervisor gcSupervisor) {
         this.regionList = getBeanList(Region.class, regionCount);
         for (int i = 0; i < regionCount; i++) {
-            this.regionList.get(i).setId(i);
+            Region region = this.regionList.get(i);
+            region.setId(i);
+            if (i % 2 == 0) {
+                region.setRegionType(Region.RegionType.EDEN);
+            } else {
+                region.setRegionType(Region.RegionType.OLD);
+            }
+            if (i == 11 || i == 13) {
+                region.setRegionType(Region.RegionType.SURVIVOR);
+            }
+            if (i == 24) {
+                region.setRegionType(Region.RegionType.HUMONGOUS);
+            }
         }
         this.gcSupervisor = gcSupervisor;
     }

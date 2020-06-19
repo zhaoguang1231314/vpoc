@@ -31,7 +31,7 @@ public class Region {
     public RegionType regionType = RegionType.EDEN;
 
     public enum RegionType {
-        EDEN, SURVIVOR, OLD
+        EDEN, SURVIVOR, OLD, HUMONGOUS
     }
 
     public Region(GcSupervisor gcSupervisor) {

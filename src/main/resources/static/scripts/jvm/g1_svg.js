@@ -1,11 +1,7 @@
 import {treemap, position, object_length} from "./g1_util.js";
 
-const Region = Object.freeze({
-    EDEN: Symbol("eden"),
-    SURVIVOR: Symbol("survivor"),
-    OLD: Symbol("old")
-});
-let color = d3.scaleOrdinal(d3.schemeCategory10);
+let colorCategory10 = d3.scaleOrdinal(d3.schemeCategory10);
+let colorPastel2 = d3.scaleOrdinal(d3.schemePastel2);
 let margin = {top: 40, right: 90, bottom: 50, left: 90},
     width = 900 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
@@ -24,13 +20,12 @@ export function gc() {
 export function allocate(obj) {
     let region = d3.select('#region-' + obj.region.id);
     let {x, y} = position(region, obj.address);
-    g.append("rect")
+    g.append("circle")
         .attr("id", 'obj-' + obj.id)
-        .attr("x", x)
-        .attr("y", y)
-        .attr("width", object_length)
-        .attr("height", object_length)
-        .attr("fill", color(Math.floor(Math.random() * 10)))
+        .attr("cx", x + object_length / 2)
+        .attr("cy", y + object_length / 2)
+        .attr("r", object_length / 2)
+        .attr("fill", colorCategory10(Math.floor(Math.random() * 10)))
         .attr("stroke", "blue");
 }
 
@@ -73,25 +68,51 @@ export function init_heap() {
         .attr("height", d => {
             return d.length;
         })
-        .attr("fill", "none")
+        .attr("fill", d => {
+            let i = d.id;
+            let color = colorPastel2(0);
+            if (i % 2 == 0) {
+                // region.setRegionType(Region.RegionType.EDEN);
+                color = colorPastel2(0);
+            } else {
+                // region.setRegionType(Region.RegionType.OLD);
+                color = colorPastel2(1);
+            }
+            if (i == 11 || i == 13) {
+                // region.setRegionType(Region.RegionType.SURVIVOR);
+                color = colorPastel2(2);
+            }
+            if (i == 24) {
+                // region.setRegionType(Region.RegionType.HUMONGOUS);
+                color = colorPastel2(3);
+            }
+            return color;
+        })
         .attr("stroke", "blue");
+
+    g.selectAll(".region_label")
+        .data(root.decendents)
+        .enter()
+        .append("text")
+        .attr("x", d => {
+            return d.x + d.length / 2;
+        })
+        .attr("y", d => {
+            return d.y + d.length / 2;
+        })
+        .style("text-anchor", "middle")
+        .text(function (d) {
+            let i = d.id;
+            let text = 'E';
+            if (i % 2 == 1) {
+                text = 'O';
+            }
+            if (i == 11 || i == 13) {
+                text = 'S';
+            }
+            if (i == 24) {
+                text = 'H';
+            }
+            return text;
+        });
 }
-
-
-// .attr("transform", function (d) {
-//     return "translate(" + 300 + "," + 100 + ")";
-// });
-
-// // adds the text to the node
-// node.append("text")
-//     .attr("dy", ".35em")
-//     .attr("y", function (d) {
-//         return d.children ? -20 : 20;
-//     })
-//     .style("text-anchor", "middle")
-//     .text(function (d) {
-//         return d.data.key;
-//     });
-
-
-
