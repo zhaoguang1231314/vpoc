@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static io.vizit.vpoc.jvm.model.JvmConfig.MaxTenuringThreshold;
+
 @Getter
 @Setter
 @Component
@@ -30,6 +33,14 @@ public class Region {
     private final GcSupervisor gcSupervisor;
     public RegionType regionType = RegionType.EDEN;
 
+    public void copy(ObjectBO objectBO) {
+        objectBO.setAddress(allocatedPointer.get());
+        objectBO.increaseAge();
+        allocatedObjects.add(objectBO);
+        allocatedPointer.addAndGet(objectBO.getSize());
+        gcSupervisor.copy(new Copy(objectBO, this));
+    }
+
     public enum RegionType {
         EDEN, SURVIVOR, OLD, HUMONGOUS
     }
@@ -45,6 +56,10 @@ public class Region {
         allocatedPointer.addAndGet(objectBO.getSize());
         gcSupervisor.reportNewObject(objectBO);
         return objectBO;
+    }
+
+    public synchronized boolean empty() {
+        return allocatedObjects.isEmpty();
     }
 
     public synchronized boolean available(int size) {
