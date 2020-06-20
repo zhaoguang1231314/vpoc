@@ -3,7 +3,6 @@ export function run(debug = false) {
         "size": 1,
         "count": 100000,
         "delay": 100,
-        "reset": true,
         "debug": debug
     }
     let url = "/jvm/gc/new";

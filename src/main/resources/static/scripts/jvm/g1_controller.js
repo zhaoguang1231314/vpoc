@@ -3,7 +3,6 @@ export function run(debug = false) {
         "size": 1,
         "count": 10000,
         "delay": 100,
-        "reset": false,
         "debug": debug,
         "gcChoice": "G1_YOUNG"
     }

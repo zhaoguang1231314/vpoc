@@ -116,7 +116,7 @@ public class G1Heap implements Heap {
     @Override
     public void clear() {
         sequence = new AtomicLong(1);
-        regionList.forEach(region -> region.sweep());
+        regionList.stream().filter(region -> !region.empty()).forEach(region -> region.sweep());
         gcSupervisor.go();
     }
 

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,21 +30,23 @@ public class GcSupervisor {
     private boolean debug; // pause before mark, copy, sweep
     private Lock lock = new ReentrantLock();
     private Condition go = lock.newCondition();
+    private transient boolean stop = false;
 
     public GcSupervisor(SimpMessageSendingOperations messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
 
     public List<ObjectBO> newObjects(Heap heap, NewRequest request) {
-
+        restart();
         List<ObjectBO> objects = new ArrayList<>();
         setDelay(request.getDelay());
-        if (request.isReset()) {
-            heap.clear();
-        }
+        heap.clear();
         setDebug(request.isDebug());
 
         for (int i = 0; i < request.getCount(); i++) {
+            if (stop) {
+                break;
+            }
             int size = request.getSize();
             if (request.getRandomSizeMax() > 0) {
                 size = ThreadLocalRandom.current().nextInt(1, request.getRandomSizeMax());
@@ -129,9 +130,21 @@ public class GcSupervisor {
     }
 
     public void stop() {
+        stop = true;
         debug = false;
         lock.lock();
-        go.signal();
+        go.signalAll();
         lock.unlock();
+        try {
+            // waiting to stop
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void restart() {
+        stop();
+        stop = false;
     }
 }
