@@ -32,7 +32,7 @@ export function allocate(obj) {
         .attr("x", -5)
         .attr("y", 5)
         .text(obj.age)
-        .attr("stroke", "white");
+        .attr("stroke", "black");
 }
 
 export function mark(obj) {
@@ -64,7 +64,7 @@ export function copy(data) {
         .attr("x", -5)
         .attr("y", 5)
         .text(data.objectBO.age)
-        .attr("stroke", "white");
+        .attr("stroke", "black");
 }
 
 export function sweep(data) {

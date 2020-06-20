@@ -1,7 +1,7 @@
 export function run(debug = false) {
     let request = {
         "size": 1,
-        "count": 200,
+        "count": 300,
         "delay": 100,
         "reset": false,
         "debug": debug

@@ -77,7 +77,7 @@ public class Region {
         Collections.sort(allocatedObjects, Comparator.comparingInt(ObjectBO::getAge).reversed());
         Set<Integer> set = new HashSet<>();
         set.add(0);
-        while (set.size() < 2) {
+        while (set.size() < 3) {
             int nextInt = ThreadLocalRandom.current().nextInt(allocatedObjects.size());
             set.add(nextInt);
         }

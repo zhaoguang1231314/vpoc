@@ -86,7 +86,7 @@ public class G1Heap implements Heap {
     public void copy(ObjectBO objectBO, Region to) {
         ObjectBO copy = (ObjectBO) objectBO.clone();
         if (copy.getAge() >= MaxTenuringThreshold) {
-            Optional<Region> old = oList.stream().filter(region -> region.empty()).findFirst();
+            Optional<Region> old = oList.stream().filter(region -> region.available(1)).findFirst();
             if (!old.isPresent()) {
                 throw new RuntimeException("No available Old Region!");
             }
