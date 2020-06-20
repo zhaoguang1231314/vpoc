@@ -11,11 +11,13 @@ public class Copy {
     private SpaceEnum from;
     private SpaceEnum to;
     private ObjectBO objectBO;
+    private Region fromRegion;
     private Region toRegion;
 
-    public Copy(ObjectBO objectBO, Region region) {
+    public Copy(Region from, Region to, ObjectBO objectBO) {
         this.objectBO = objectBO;
-        this.toRegion = region;
+        this.fromRegion = from;
+        this.toRegion = to;
     }
 
     public Copy(SpaceEnum from, SpaceEnum to, ObjectBO objectBO) {

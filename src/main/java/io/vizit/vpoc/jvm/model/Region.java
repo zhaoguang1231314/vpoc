@@ -8,10 +8,7 @@ import lombok.Setter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,11 +32,13 @@ public class Region {
     public RegionType regionType = RegionType.EDEN;
 
     public void copy(ObjectBO objectBO) {
+        Region from = objectBO.getRegion();
         objectBO.setAddress(allocatedPointer.get());
+        objectBO.setRegion(this);
         objectBO.increaseAge();
         allocatedObjects.add(objectBO);
         allocatedPointer.addAndGet(objectBO.getSize());
-        gcSupervisor.copy(new Copy(objectBO, this));
+        gcSupervisor.copy(new Copy(from, this, objectBO));
     }
 
     public enum RegionType {
@@ -75,8 +74,10 @@ public class Region {
     }
 
     public synchronized void mark() {
+        Collections.sort(allocatedObjects, Comparator.comparingInt(ObjectBO::getAge).reversed());
         Set<Integer> set = new HashSet<>();
-        while (set.size() < 3) {
+        set.add(0);
+        while (set.size() < 2) {
             int nextInt = ThreadLocalRandom.current().nextInt(allocatedObjects.size());
             set.add(nextInt);
         }
@@ -85,5 +86,6 @@ public class Region {
             liveObjects.add(objectBO);
             gcSupervisor.mark(objectBO);
         });
+
     }
 }

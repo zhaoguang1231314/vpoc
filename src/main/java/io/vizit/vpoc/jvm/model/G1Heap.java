@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import static io.vizit.vpoc.config.ApplicationContextProvider.getBeanList;
 import static io.vizit.vpoc.jvm.model.JvmConfig.MaxTenuringThreshold;
+import static java.lang.Thread.sleep;
 
 @Getter
 @Setter
@@ -53,6 +54,11 @@ public class G1Heap implements Heap {
     public ObjectBO allocate(int size) {
         if (niceToYoungGc()) {
             youngGc();
+            try {
+                sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         Region niceEden = findNiceEden();
         if (niceEden == null) {

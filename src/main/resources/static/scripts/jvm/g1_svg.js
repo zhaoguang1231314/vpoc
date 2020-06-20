@@ -1,4 +1,5 @@
 import {treemap, position, object_length} from "./g1_util.js";
+
 let colorCategory10 = d3.scaleOrdinal(d3.schemeCategory10);
 let colorPastel2 = d3.scaleOrdinal(d3.schemePastel2);
 let margin = {top: 40, right: 90, bottom: 50, left: 90},
@@ -27,12 +28,13 @@ export function allocate(obj) {
         .attr("r", object_length / 2)
         .attr("fill", colorCategory10(Math.floor(Math.random() * 10)))
         .attr("stroke", "blue");
-    // obj_g.append("text")
-    //     .attr("x", object_length / 2)
-    //     .attr("y", object_length / 2)
-    //     .text(obj.id)
-    //     .attr("stroke", "blue");
+    obj_g.append("text")
+        .attr("x", -5)
+        .attr("y", 5)
+        .text(obj.age)
+        .attr("stroke", "white");
 }
+
 export function mark(obj) {
     let obj_g = d3.select('#obj-' + obj.id);
     obj_g.select('circle')
@@ -42,11 +44,12 @@ export function mark(obj) {
         .attr("fill", "white");
 
 }
+
 export function copy(data) {
     let obj_g = d3.select('#obj-' + data.objectBO.id);
     let region = d3.select('#region-' + data.toRegion.id);
     let {x, y} = position(region, data.objectBO.address);
-    obj_g.classed('region-obj-' + data.objectBO.region.id, false)
+    obj_g.classed('region-obj-' + data.fromRegion.id, false)
         .classed('region-obj-' + data.toRegion.id, true)
         .transition()
         .duration(1000)
@@ -57,7 +60,13 @@ export function copy(data) {
         .duration(1000)
         .attr("transform", "scale(0.95)")
         .attr("fill", colorCategory10(Math.floor(Math.random() * 10)));
+    obj_g.select("text")
+        .attr("x", -5)
+        .attr("y", 5)
+        .text(data.objectBO.age)
+        .attr("stroke", "white");
 }
+
 export function sweep(data) {
     d3.selectAll('.region-obj-' + data.region.id)
         .transition('sweep')

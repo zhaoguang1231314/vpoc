@@ -1,9 +1,9 @@
 export function run(debug = false) {
     let request = {
         "size": 1,
-        "count": 51,
+        "count": 200,
         "delay": 100,
-        "reset": true,
+        "reset": false,
         "debug": debug
     }
     let url = "/jvm/gc/new";
