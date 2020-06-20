@@ -74,7 +74,7 @@ public class G1Heap implements Heap {
             region.getLiveObjects().forEach(objectBO -> copy(objectBO, toS.get()));
         });
         // sweep
-        Stream.concat(eList.stream(), sList.stream()).filter(region -> !region.empty()).forEach(region -> region.sweep());
+        Stream.concat(eList.stream(), sList.stream()).filter(region -> !region.empty() && !region.equals(toS.get())).forEach(region -> region.sweep());
     }
 
     public void copy(ObjectBO objectBO, Region to) {

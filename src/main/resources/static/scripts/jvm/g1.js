@@ -1,4 +1,4 @@
-import {gc, init_heap, allocate} from "./g1_svg.js";
+import {init_heap, allocate, mark, copy, sweep} from "./g1_svg.js";
 import {run, action} from "./g1_controller.js";
 
 let stompClient = null;
@@ -14,12 +14,15 @@ function connect() {
         });
         stompClient.subscribe('/topic/gc/mark', function (data) {
             console.log('mark: ' + data.body);
+            mark(JSON.parse(data.body));
         });
         stompClient.subscribe('/topic/gc/copy', function (data) {
             console.log('copy: ' + data.body);
+            copy(JSON.parse(data.body));
         });
         stompClient.subscribe('/topic/gc/sweep', function (data) {
             console.log('sweep: ' + data.body);
+            sweep(JSON.parse(data.body));
         });
         stompClient.subscribe('/topic/gc/promotion', function (data) {
             console.log('promotion: ' + data.body);

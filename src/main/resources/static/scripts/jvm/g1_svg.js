@@ -1,5 +1,4 @@
 import {treemap, position, object_length} from "./g1_util.js";
-
 let colorCategory10 = d3.scaleOrdinal(d3.schemeCategory10);
 let colorPastel2 = d3.scaleOrdinal(d3.schemePastel2);
 let margin = {top: 40, right: 90, bottom: 50, left: 90},
@@ -13,17 +12,15 @@ let svg = d3.select("#paper")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-export function gc() {
-
-}
-
 export function allocate(obj) {
     let region = d3.select('#region-' + obj.region.id);
     let {x, y} = position(region, obj.address);
     let obj_g = g.append('g')
         .attr("transform",
             "translate(" + (x + object_length / 2) + "," + (y + object_length / 2) + ")")
-        .attr("id", 'obj-' + obj.id);
+        .attr("id", 'obj-' + obj.id)
+        .classed('region-obj-' + obj.region.id, true);
+
     obj_g.append("circle")
         .attr("cx", 0)
         .attr("cy", 0)
@@ -35,7 +32,38 @@ export function allocate(obj) {
     //     .attr("y", object_length / 2)
     //     .text(obj.id)
     //     .attr("stroke", "blue");
+}
+export function mark(obj) {
+    let obj_g = d3.select('#obj-' + obj.id);
+    obj_g.select('circle')
+        .transition()
+        .duration(1000)
+        .attr("transform", "scale(1.2)")
+        .attr("fill", "white");
 
+}
+export function copy(data) {
+    let obj_g = d3.select('#obj-' + data.objectBO.id);
+    let region = d3.select('#region-' + data.toRegion.id);
+    let {x, y} = position(region, data.objectBO.address);
+    obj_g.classed('region-obj-' + data.objectBO.region.id, false)
+        .classed('region-obj-' + data.toRegion.id, true)
+        .transition()
+        .duration(1000)
+        .attr("transform",
+            "translate(" + (x + object_length / 2) + "," + (y + object_length / 2) + ")");
+    obj_g.select('circle')
+        .transition()
+        .duration(1000)
+        .attr("transform", "scale(0.95)")
+        .attr("fill", colorCategory10(Math.floor(Math.random() * 10)));
+}
+export function sweep(data) {
+    d3.selectAll('.region-obj-' + data.region.id)
+        .transition('sweep')
+        .duration(1000)
+        .delay(1000)
+        .remove();
 }
 
 export function init_heap() {

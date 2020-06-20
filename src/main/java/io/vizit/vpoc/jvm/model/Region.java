@@ -2,6 +2,7 @@ package io.vizit.vpoc.jvm.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vizit.vpoc.jvm.GcSupervisor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Scope;
@@ -14,13 +15,13 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.vizit.vpoc.jvm.model.JvmConfig.MaxTenuringThreshold;
-
 @Getter
 @Setter
 @Component
 @Scope("prototype")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Region {
+    @EqualsAndHashCode.Include
     private int id;
     @JsonIgnore
     private int capacity = JvmConfig.getRegionSize();
@@ -70,7 +71,7 @@ public class Region {
         allocatedObjects.clear();
         liveObjects.clear();
         allocatedPointer.set(0);
-        gcSupervisor.sweep(new Sweep(SpaceEnum.EDEN));
+        gcSupervisor.sweep(new Sweep(this));
     }
 
     public synchronized void mark() {
