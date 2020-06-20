@@ -1,14 +1,17 @@
 package io.vizit.vpoc.jvm;
 
 import com.google.common.collect.ImmutableMap;
-import io.vizit.vpoc.jvm.model.Copy;
-import io.vizit.vpoc.jvm.model.ObjectBO;
-import io.vizit.vpoc.jvm.model.Sweep;
+import io.vizit.vpoc.jvm.api.NewRequest;
+import io.vizit.vpoc.jvm.model.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -31,6 +34,26 @@ public class GcSupervisor {
 
     public GcSupervisor(SimpMessageSendingOperations messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
+    }
+
+    public List<ObjectBO> newObjects(Heap heap, NewRequest request) {
+
+        List<ObjectBO> objects = new ArrayList<>();
+        setDelay(request.getDelay());
+        if (request.isReset()) {
+            heap.clear();
+        }
+        setDebug(request.isDebug());
+
+        for (int i = 0; i < request.getCount(); i++) {
+            int size = request.getSize();
+            if (request.getRandomSizeMax() > 0) {
+                size = ThreadLocalRandom.current().nextInt(1, request.getRandomSizeMax());
+            }
+            ObjectBO objectBO = heap.allocate(size);
+            objects.add(objectBO);
+        }
+        return objects;
     }
 
     public void reportNewObject(ObjectBO objectBO) {
@@ -103,5 +126,12 @@ public class GcSupervisor {
             lock.unlock();
         }
         return debug;
+    }
+
+    public void stop() {
+        debug = false;
+        lock.lock();
+        go.signal();
+        lock.unlock();
     }
 }

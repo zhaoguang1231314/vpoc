@@ -2,9 +2,9 @@ import {treemap, position, object_length} from "./g1_util.js";
 
 let colorCategory10 = d3.scaleOrdinal(d3.schemeCategory10);
 let colorPastel2 = d3.scaleOrdinal(d3.schemePastel2);
-let margin = {top: 40, right: 90, bottom: 50, left: 90},
-    width = 900 - margin.left - margin.right,
-    height = 900 - margin.top - margin.bottom;
+let margin = {top: 40, right: 90, bottom: 50, left: 150},
+    width = 1200 - margin.left - margin.right,
+    height = 1000 - margin.top - margin.bottom;
 
 let svg = d3.select("#paper")
         .attr("width", width + margin.left + margin.right)
