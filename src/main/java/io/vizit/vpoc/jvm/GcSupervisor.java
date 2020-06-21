@@ -143,7 +143,9 @@ public class GcSupervisor {
         try {
             // waiting to stop
             Thread.sleep(1000);
-            this.heap.clear();
+            if (this.heap != null) {
+                this.heap.clear();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

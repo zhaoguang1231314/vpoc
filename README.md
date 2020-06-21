@@ -12,10 +12,16 @@
 mvn -N io.takari:maven:wrapper
 ```
 # 已经完成的演示动画
-* JVM 年轻代的标记复制算法 
+## JVM G1 年轻代的标记复制算法 
 
-[动画演示视频](https://www.ixigua.com/pseries/6835238917629805067_6834743668876771843/)
-![JVM 年轻代的标记复制算法](https://github.com/visualizit/vpoc/blob/master/snapshot/jvm_young_gc.png)
+* [动画演示视频](https://www.ixigua.com/i6840394661685625357/)
+* ![JVM 年轻代的标记复制算法](https://github.com/visualizit/vpoc/blob/master/snapshot/jvm_young_gc.png)
+
+## JVM 年轻代的标记复制算法 
+
+* [动画演示视频](https://www.ixigua.com/pseries/6835238917629805067_6834743668876771843/)
+* ![JVM 年轻代的标记复制算法](https://github.com/visualizit/vpoc/blob/master/snapshot/g1_young.png)
+
 
 # 进行中的演示动画
 * JVM G1 垃圾回收算法
