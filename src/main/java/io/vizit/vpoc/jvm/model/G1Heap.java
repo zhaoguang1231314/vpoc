@@ -39,7 +39,7 @@ public class G1Heap implements Heap {
             } else if (i == 24) {
                 region.setRegionType(Region.RegionType.HUMONGOUS);
                 hList.add(region);
-            } else if (i % 2 == 0) {
+            } else if (i % 2 == 0 && i < 10) {
                 region.setRegionType(Region.RegionType.EDEN);
                 eList.add(region);
             } else {

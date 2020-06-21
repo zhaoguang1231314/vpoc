@@ -118,20 +118,14 @@ export function init_heap() {
         .attr("fill", d => {
             let i = d.id;
             let color = colorPastel2(0);
-            if (i % 2 == 0) {
-                // region.setRegionType(Region.RegionType.EDEN);
+            if (i == 11 || i == 13) {
+                color = colorPastel2(2);
+            } else if (i == 24) {
+                color = colorPastel2(3);
+            } else if (i % 2 == 0 && i < 10) {
                 color = colorPastel2(0);
             } else {
-                // region.setRegionType(Region.RegionType.OLD);
                 color = colorPastel2(1);
-            }
-            if (i == 11 || i == 13) {
-                // region.setRegionType(Region.RegionType.SURVIVOR);
-                color = colorPastel2(2);
-            }
-            if (i == 24) {
-                // region.setRegionType(Region.RegionType.HUMONGOUS);
-                color = colorPastel2(3);
             }
             return color;
         })
@@ -152,14 +146,14 @@ export function init_heap() {
         .text(function (d) {
             let i = d.id;
             let text = 'E';
-            if (i % 2 == 1) {
-                text = 'O';
-            }
             if (i == 11 || i == 13) {
                 text = 'S';
-            }
-            if (i == 24) {
+            } else if (i == 24) {
                 text = 'H';
+            } else if (i % 2 == 0 && i < 10) {
+                text = 'E';
+            } else {
+                text = 'O';
             }
             return text;
         });
