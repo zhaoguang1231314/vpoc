@@ -31,18 +31,19 @@ public class GcSupervisor {
     private Lock lock = new ReentrantLock();
     private Condition go = lock.newCondition();
     private transient boolean stop = false;
+    private Heap heap;
 
     public GcSupervisor(SimpMessageSendingOperations messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
 
     public List<ObjectBO> newObjects(Heap heap, NewRequest request) {
+        this.heap = heap;
         restart();
-        List<ObjectBO> objects = new ArrayList<>();
-        setDelay(request.getDelay());
-        heap.clear();
-        setDebug(request.isDebug());
+        delay = request.getDelay();
+        debug = request.isDebug();
 
+        List<ObjectBO> objects = new ArrayList<>();
         for (int i = 0; i < request.getCount(); i++) {
             if (stop) {
                 heap.clear();
@@ -73,6 +74,9 @@ public class GcSupervisor {
     }
 
     private void debug(String msg) {
+        if (stop) {
+            return;
+        }
         if (debug) {
             lock.lock();
             try {
@@ -139,6 +143,7 @@ public class GcSupervisor {
         try {
             // waiting to stop
             Thread.sleep(1000);
+            this.heap.clear();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -146,6 +151,7 @@ public class GcSupervisor {
 
     public void restart() {
         stop();
+
         stop = false;
     }
 }
