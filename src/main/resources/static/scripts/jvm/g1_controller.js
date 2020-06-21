@@ -1,12 +1,13 @@
 export function run(debug = false) {
     let request = {
         "size": 1,
-        "count": 100000,
+        "count": 10000,
         "delay": 100,
-        "debug": debug
+        "debug": debug,
+        "gcChoice": "G1_YOUNG"
     }
     let url = "/jvm/gc/new";
-    $.postJSON(url, request, (data) => console.log(`${url}: ${data}`));
+    $.postJSON(url, request, (data) => console.log(`${url}: ${JSON.stringify(data)}`));
 }
 
 export function action(action = 'go') {

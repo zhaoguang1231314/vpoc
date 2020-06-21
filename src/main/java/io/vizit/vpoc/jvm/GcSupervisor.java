@@ -1,14 +1,16 @@
 package io.vizit.vpoc.jvm;
 
 import com.google.common.collect.ImmutableMap;
-import io.vizit.vpoc.jvm.model.Copy;
-import io.vizit.vpoc.jvm.model.ObjectBO;
-import io.vizit.vpoc.jvm.model.Sweep;
+import io.vizit.vpoc.jvm.api.NewRequest;
+import io.vizit.vpoc.jvm.model.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -28,9 +30,33 @@ public class GcSupervisor {
     private boolean debug; // pause before mark, copy, sweep
     private Lock lock = new ReentrantLock();
     private Condition go = lock.newCondition();
+    private transient boolean stop = false;
+    private Heap heap;
 
     public GcSupervisor(SimpMessageSendingOperations messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
+    }
+
+    public List<ObjectBO> newObjects(Heap heap, NewRequest request) {
+        this.heap = heap;
+        restart();
+        delay = request.getDelay();
+        debug = request.isDebug();
+
+        List<ObjectBO> objects = new ArrayList<>();
+        for (int i = 0; i < request.getCount(); i++) {
+            if (stop) {
+                heap.clear();
+                break;
+            }
+            int size = request.getSize();
+            if (request.getRandomSizeMax() > 0) {
+                size = ThreadLocalRandom.current().nextInt(1, request.getRandomSizeMax());
+            }
+            ObjectBO objectBO = heap.allocate(size);
+            objects.add(objectBO);
+        }
+        return objects;
     }
 
     public void reportNewObject(ObjectBO objectBO) {
@@ -48,6 +74,9 @@ public class GcSupervisor {
     }
 
     private void debug(String msg) {
+        if (stop) {
+            return;
+        }
         if (debug) {
             lock.lock();
             try {
@@ -103,5 +132,26 @@ public class GcSupervisor {
             lock.unlock();
         }
         return debug;
+    }
+
+    public void stop() {
+        stop = true;
+        debug = false;
+        lock.lock();
+        go.signalAll();
+        lock.unlock();
+        try {
+            // waiting to stop
+            Thread.sleep(1000);
+            this.heap.clear();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void restart() {
+        stop();
+
+        stop = false;
     }
 }
