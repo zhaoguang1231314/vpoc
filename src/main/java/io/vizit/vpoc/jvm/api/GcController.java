@@ -54,4 +54,9 @@ public class GcController {
         return true;
     }
 
+    @RequestMapping(value = "/debug/stop", method = RequestMethod.POST)
+    public @ResponseBody
+    void stop() {
+        gcSupervisor.stop();
+    }
 }

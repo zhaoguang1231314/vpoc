@@ -45,6 +45,7 @@ public class GcSupervisor {
 
         for (int i = 0; i < request.getCount(); i++) {
             if (stop) {
+                heap.clear();
                 break;
             }
             int size = request.getSize();

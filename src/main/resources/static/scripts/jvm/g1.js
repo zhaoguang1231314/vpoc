@@ -50,4 +50,5 @@ $(function () {
     $("#go").click(action.bind(null, 'go'));
     $("#step").click(action.bind(null, 'step'));
     $("#pause").click(action.bind(null, 'pause'));
+    $("#stop").click(action.bind(null, 'stop'));
 });
