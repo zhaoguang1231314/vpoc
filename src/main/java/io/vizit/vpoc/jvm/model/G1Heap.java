@@ -98,7 +98,7 @@ public class G1Heap implements Heap {
 
     private boolean niceToYoungGc() {
         long fullCount = eList.stream().filter(region -> !region.available(1)).count();
-        return fullCount >= 2; // should be able to gc within MaxGCPauseMillis (200ms)
+        return fullCount == eList.size(); // full
     }
 
     private void gc() {
