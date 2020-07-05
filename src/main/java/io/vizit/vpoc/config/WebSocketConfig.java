@@ -12,6 +12,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     public static final String WEBSOCKET_JVM = "/jvm";
     public static final String WEBSOCKET_TREE = "/tree";
+    public static final String WEBSOCKET_KAFKA = "/kafka";
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -23,6 +24,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint(WEBSOCKET_JVM).withSockJS();
         registry.addEndpoint(WEBSOCKET_TREE).withSockJS();
+        registry.addEndpoint(WEBSOCKET_KAFKA).withSockJS();
     }
 
 }
