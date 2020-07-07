@@ -4,6 +4,7 @@
 # 启动程序
 ## 启动服务
 ```bash
+cd web
 ./mvnw spring-boot:run
 ```
 
