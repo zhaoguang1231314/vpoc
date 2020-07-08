@@ -13,6 +13,23 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate \
 	-DinteractiveMode=false
 ```
 
+# 运行
+## 在本机的flink,请先安装flink。
+```bash
+./bin/flink run vflink-0.0.1-SNAPSHOT.jar
+```
+可以在TaskManager的log里看日志:
+```bash
+http://localhost:8081/#/task-manager
+```
+
+
+## 在Intellij里运行
+直接运行这个类:
+```bash
+io.vizit.vpoc.FraudDetectionJob
+```
+
 # Trouble Shooting
 ## Cannot find 'resource' in class
 
@@ -41,18 +58,18 @@ mvn archetype:generate \
 
 ## java.lang.NoClassDefFoundError: org/apache/flink/streaming/api/functions/source/SourceFunction
 在IDE里面运行，需要注释掉provided
-```xml
+```text
 <dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
-			<version>${flink.version}</version>
-<!--			<scope>provided</scope>-->
-		</dependency>
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-clients_${scala.binary.version}</artifactId>
-			<version>${flink.version}</version>
-<!--			<scope>provided</scope>-->
-		</dependency>
+    <groupId>org.apache.flink</groupId>
+    <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
+    <version>${flink.version}</version>
+<!--<scope>provided</scope>-->
+    </dependency>
+    <dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-clients_${scala.binary.version}</artifactId>
+        <version>${flink.version}</version>
+<!--    <scope>provided</scope>-->
+    </dependency>
 ```
 
