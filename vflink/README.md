@@ -38,3 +38,21 @@ mvn archetype:generate \
     -Dpackage=spendreport \
     -DinteractiveMode=false
 ```
+
+## java.lang.NoClassDefFoundError: org/apache/flink/streaming/api/functions/source/SourceFunction
+在IDE里面运行，需要注释掉provided
+```xml
+<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
+			<version>${flink.version}</version>
+<!--			<scope>provided</scope>-->
+		</dependency>
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-clients_${scala.binary.version}</artifactId>
+			<version>${flink.version}</version>
+<!--			<scope>provided</scope>-->
+		</dependency>
+```
+
