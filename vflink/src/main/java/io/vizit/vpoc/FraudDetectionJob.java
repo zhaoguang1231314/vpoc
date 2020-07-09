@@ -19,6 +19,7 @@
 package io.vizit.vpoc;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.walkthrough.common.sink.AlertSink;
 import org.apache.flink.walkthrough.common.entity.Alert;
@@ -26,7 +27,6 @@ import org.apache.flink.walkthrough.common.entity.Transaction;
 import org.apache.flink.walkthrough.common.source.TransactionSource;
 
 /**
- * Skeleton code for the datastream walkthrough
  */
 public class FraudDetectionJob {
 	public static void main(String[] args) throws Exception {
@@ -45,6 +45,6 @@ public class FraudDetectionJob {
 			.addSink(new AlertSink())
 			.name("send-alerts");
 
-		env.execute("Fraud Detection");
+        env.execute("Fraud Detection");
 	}
 }
