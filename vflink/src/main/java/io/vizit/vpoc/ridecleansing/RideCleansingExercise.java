@@ -21,6 +21,7 @@ package io.vizit.vpoc.ridecleansing;
 import io.vizit.vpoc.common.datatypes.TaxiRide;
 import io.vizit.vpoc.common.sources.TaxiRideSource;
 import io.vizit.vpoc.common.utils.ExerciseBase;
+import io.vizit.vpoc.common.utils.GeoUtils;
 import io.vizit.vpoc.common.utils.MissingSolutionException;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -78,7 +79,9 @@ public class RideCleansingExercise extends ExerciseBase {
 
 		@Override
 		public boolean filter(TaxiRide taxiRide) throws Exception {
-			throw new MissingSolutionException();
+//			throw new MissingSolutionException();
+            return GeoUtils.isInNYC(taxiRide.startLon, taxiRide.startLat)
+                    && GeoUtils.isInNYC(taxiRide.endLon, taxiRide.endLat);
 		}
 	}
 
