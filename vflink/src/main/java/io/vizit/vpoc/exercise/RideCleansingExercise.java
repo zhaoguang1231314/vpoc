@@ -16,13 +16,12 @@
  * limitations under the License.
  */
 
-package io.vizit.vpoc.ridecleansing;
+package io.vizit.vpoc.exercise;
 
 import io.vizit.vpoc.common.datatypes.TaxiRide;
 import io.vizit.vpoc.common.sources.TaxiRideSource;
 import io.vizit.vpoc.common.utils.ExerciseBase;
 import io.vizit.vpoc.common.utils.GeoUtils;
-import io.vizit.vpoc.common.utils.MissingSolutionException;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -62,7 +61,8 @@ public class RideCleansingExercise extends ExerciseBase {
 		env.setParallelism(ExerciseBase.parallelism);
 
 		// start the data generator
-		DataStream<TaxiRide> rides = env.addSource(rideSourceOrTest(new TaxiRideSource(input, maxEventDelay, servingSpeedFactor)));
+        TaxiRideSource taxiRideSource = new TaxiRideSource(input, maxEventDelay, servingSpeedFactor);
+        DataStream<TaxiRide> rides = env.addSource(rideSourceOrTest(taxiRideSource));
 
 		DataStream<TaxiRide> filteredRides = rides
 				// filter out rides that do not start or stop in NYC

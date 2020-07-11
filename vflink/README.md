@@ -32,8 +32,10 @@ io.vizit.vpoc.FraudDetectionJob
 
 ## 做作业
 官网有个培训，并且有个练习的项目。我尝试做一下。
+```text
+https://ci.apache.org/projects/flink/flink-docs-release-1.11/learn-flink/
 https://github.com/apache/flink-training
-
+```
 # Trouble Shooting
 ## Cannot find 'resource' in class
 
