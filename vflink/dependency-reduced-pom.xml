@@ -94,7 +94,7 @@
               </filters>
               <transformers>
                 <transformer>
-                  <mainClass>io.vizit.vpoc.KafkaFraudDetectionJob</mainClass>
+                  <mainClass>io.vizit.vpoc.ToUpperCaseJob</mainClass>
                 </transformer>
               </transformers>
             </configuration>

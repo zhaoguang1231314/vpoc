@@ -11,28 +11,30 @@ import java.util.Properties;
 /**
  * https://ci.apache.org/projects/flink/flink-docs-stable/dev/connectors/kafka.html
  */
-public class KafkaFraudDetectionJob {
+public class ToUpperCaseJob {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "localhost:9092");
-        properties.setProperty("group.id", "KafkaFraudDetectionJob");
+        properties.setProperty("group.id", "ToUpperCaseJob");
         properties.setProperty("transaction.timeout.ms", "100000");
+        // 创建一个consumer，接受TOPIC-IN的消息
         FlinkKafkaConsumer<String> kafkaConsumer = new FlinkKafkaConsumer<>("TOPIC-IN", new SimpleStringSchema(), properties);
-        kafkaConsumer.setStartFromEarliest();
-
-        DataStream<String> stream = env.addSource(kafkaConsumer).name("kafkaConsumer");
-
+        kafkaConsumer.setStartFromLatest();
+        DataStream<String> stream = env.addSource(kafkaConsumer)
+                .name("kafkaConsumer");
+        // 定义一个处理函数，把输入转成大写
+        DataStream<String> operator = stream.process(new ToUpperCaseFunction())
+                .name("ToUpperCaseOperator");
+        // 创建一个producer，把消息发送到TOPIC-OUT
         FlinkKafkaProducer<String> kafkaProducer = new FlinkKafkaProducer<>(
                 "TOPIC-OUT",
                 new SimpleStringSchema(),
                 properties);
+        operator.addSink(kafkaProducer)
+                .name("kafkaProducer");
 
-        DataStream<String> out = stream.process(new KafkaDetector())
-                .name("flink-job");
-
-        out.addSink(kafkaProducer).name("kafkaProducer");
-        env.execute("Fraud Detection");
+        env.execute("ToUpperCase");
     }
 }
