@@ -39,7 +39,7 @@ under the License.
 		<scala.binary.version>2.11</scala.binary.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<log4j.version>2.13.3</log4j.version>
+		<log4j.version>2.13.1</log4j.version>
 	</properties>
 
 	<repositories>
@@ -56,6 +56,12 @@ under the License.
 	</repositories>
 
 	<dependencies>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-kafka_2.11</artifactId>
+            <version>1.11.0</version>
+        </dependency>
+
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-walkthrough-common_${scala.binary.version}</artifactId>
@@ -160,7 +166,7 @@ under the License.
 							</filters>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>io.vizit.vpoc.FraudDetectionJob</mainClass>
+									<mainClass>io.vizit.vpoc.KafkaFraudDetectionJob</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>
