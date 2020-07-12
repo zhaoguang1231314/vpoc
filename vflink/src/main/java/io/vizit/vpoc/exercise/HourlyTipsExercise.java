@@ -54,28 +54,29 @@ public class HourlyTipsExercise extends ExerciseBase {
         DataStream<TaxiFare> fares = env.addSource(fareSourceOrTest(new TaxiFareSource(input, maxEventDelay, servingSpeedFactor)));
 
 //        throw new MissingSolutionException();
-        DataStream<Tuple3<Long, Float, Long>> hourlyTips = fares.keyBy((TaxiFare f) -> f.driverId)
+        DataStream<Tuple3<Long, Long, Float>> hourlyTips = fares.keyBy((TaxiFare f) -> f.driverId)
                 .window(TumblingEventTimeWindows.of(Time.hours(1)))
                 .process(new SumTips());
 
-        DataStream<Tuple3<Long, Float, Long>> hourlyMax = hourlyTips
-                .windowAll(TumblingEventTimeWindows.of(Time.hours(1)))
-                .maxBy(1);
+        DataStream<Tuple3<Long, Long, Float>> hourlyMax = hourlyTips
+                .keyBy(t -> t.f0)
+                .window(TumblingEventTimeWindows.of(Time.hours(1)))
+                .maxBy(2);
 
         printOrTest(hourlyMax);
 
         // execute the transformation pipeline
-		env.execute("Hourly Tips (java)");
+        env.execute("Hourly Tips (java)");
     }
 
-    private static class SumTips extends ProcessWindowFunction<TaxiFare, Tuple3<Long, Float, Long>, Long, TimeWindow> {
+    private static class SumTips extends ProcessWindowFunction<TaxiFare, Tuple3<Long, Long, Float>, Long, TimeWindow> {
         @Override
-        public void process(Long driverId, Context context, Iterable<TaxiFare> elements, Collector<Tuple3<Long, Float, Long>> out) throws Exception {
+        public void process(Long driverId, Context context, Iterable<TaxiFare> elements, Collector<Tuple3<Long, Long, Float>> out) throws Exception {
             float hourlyTips = 0;
             for (TaxiFare taxiFare : elements) {
                 hourlyTips += taxiFare.tip;
             }
-            out.collect(Tuple3.of(driverId, hourlyTips, context.window().getEnd()));
+            out.collect(Tuple3.of(context.window().getEnd(), driverId, hourlyTips));
         }
     }
 }

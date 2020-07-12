@@ -31,7 +31,7 @@ public class ExerciseBase {
 	public static SourceFunction<TaxiFare> fares = null;
 	public static SourceFunction<String> strings = null;
 	public static SinkFunction out = null;
-	public static int parallelism = 4;
+	public static int parallelism = 1;
 
 	public static final String PATH_TO_RIDE_DATA = "/Users/Shared/github/flink-training/nycTaxiRides.gz";
 	public static final String PATH_TO_FARE_DATA = "/Users/Shared/github/flink-training/nycTaxiFares.gz";
