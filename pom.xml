@@ -21,5 +21,6 @@
     <modules>
         <module>web</module>
     <module>vflink</module>
-  </modules>
+        <module>vkafka</module>
+    </modules>
 </project>
