@@ -22,5 +22,6 @@
         <module>web</module>
     <module>vflink</module>
         <module>vkafka</module>
+        <module>vzookeeper</module>
     </modules>
 </project>
