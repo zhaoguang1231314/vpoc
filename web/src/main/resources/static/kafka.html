@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JVM GC</title>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/style/common.css" rel="stylesheet">
+    <link href="/style/jvm.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+</head>
+<body>
+<div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">Vizit</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.ixigua.com/home/88208491670" target="_blank">头条主页</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                JVM 垃圾回收算法
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="/">年轻代标记复制算法</a>
+                                <a class="dropdown-item" href="/g1_young.html">G1 年轻代 GC</a>
+                                <a class="dropdown-item" href="#">G1 老年代 GC</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="debug_alert" class="alert alert-success text-center" role="alert">
+                Kafka 集群工作原理 动画演示
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-md-right">
+                <button id="run" type="button" class="btn btn-primary">运行</button>
+                <button id="debug" type="button" class="btn btn-warning">调试</button>
+                <button id="step" type="button" class="btn btn-success">下一步</button>
+                <button id="go" type="button" class="btn btn-info">继续</button>
+                <button id="pause" type="button" class="btn btn-secondary">暂停</button>
+                <button id="stop" type="button" class="btn btn-secondary">停止</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <svg id="paper" width="1200" height="1400">
+
+            </svg>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <footer class="footer">
+                <div class="container">
+                    <span class="text-muted">一图胜千言 - 通过动画演示抽象的原理.</span>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+<script type="module" src="/scripts/common/utils.js?2"></script>
+<script type="module" src="/scripts/kafka/websocket.js"></script>
+</body>
+
+</html>
