@@ -1,4 +1,4 @@
-package io.vizit.vpoc.kafka;
+package io.vizit.vpoc.vkafka;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static io.vizit.vpoc.config.ApplicationContextProvider.getBeanList;
 
 @Getter
 @Setter
@@ -17,7 +16,7 @@ public class Cluster {
     private List<Broker> brokers;
 
     public Cluster() {
-        brokers = getBeanList(Broker.class, 3);
+        brokers = ApplicationContextProvider.getBeanList(Broker.class, 3);
     }
     public KafkaResponse send(KafkaRequest request) {
         for (Broker broker : brokers) {

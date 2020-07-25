@@ -1,4 +1,4 @@
-package io.vizit.vpoc.kafka;
+package io.vizit.vpoc.vkafka;
 
 import lombok.Getter;
 import lombok.Setter;

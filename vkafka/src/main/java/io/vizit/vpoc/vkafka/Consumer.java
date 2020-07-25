@@ -1,4 +1,4 @@
-package io.vizit.vpoc.kafka;
+package io.vizit.vpoc.vkafka;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +9,5 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @Scope("prototype")
-public class Topic {
-    private String name;
+public class Consumer {
 }

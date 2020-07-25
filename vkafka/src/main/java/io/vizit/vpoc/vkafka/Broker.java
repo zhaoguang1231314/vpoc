@@ -1,4 +1,4 @@
-package io.vizit.vpoc.kafka;
+package io.vizit.vpoc.vkafka;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static io.vizit.vpoc.config.ApplicationContextProvider.getBeanList;
 
 @Getter
 @Setter
@@ -20,7 +19,7 @@ public class Broker {
 
     public Broker(KafkaSupervisor supervisor) {
         this.supervisor = supervisor;
-        this.partitions = getBeanList(Partition.class, 3);
+        this.partitions = ApplicationContextProvider.getBeanList(Partition.class, 3);
     }
 
     public Partition getLeader(String topic, int partition) {

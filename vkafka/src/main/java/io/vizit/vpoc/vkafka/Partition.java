@@ -1,4 +1,4 @@
-package io.vizit.vpoc.kafka;
+package io.vizit.vpoc.vkafka;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ public class Partition {
     private int id;
     private long lastOffset;
     private long committedOffset;
-    private String topic;
+    private String topic = "test";
     private int brokerId;
 
     public Partition(String topic, int brokerId) {
