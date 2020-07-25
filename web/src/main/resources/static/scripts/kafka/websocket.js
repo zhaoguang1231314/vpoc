@@ -1,3 +1,5 @@
+import {init} from "./svg.js";
+
 let stompClient = null;
 
 function connect() {
@@ -13,4 +15,5 @@ function connect() {
 
 $(function () {
     connect();
+    init();
 });
