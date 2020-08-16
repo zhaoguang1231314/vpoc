@@ -2,11 +2,11 @@ package io.vizit.vpoc.vzookeeper;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 @Getter
-public class Config {
+public class ZkConfig {
     @Value("${data.dir}")
     private String dataDir;
 

@@ -10,6 +10,9 @@ function connect() {
         stompClient.subscribe('/topic/kafka', function (data) {
             console.log('kafka: ' + data.body);
         });
+        stompClient.subscribe('/topic/zk', function (data) {
+            console.log('zk: ' + data.body);
+        });
     });
 }
 
