@@ -76,7 +76,7 @@ export function init() {
             return d.x + d.width / 2;
         })
         .attr("y", d => {
-            return d.y + d.height / 2;
+            return d.y + d.height + 30;
         })
         .classed('node_label', true)
         .style("text-anchor", "middle")
