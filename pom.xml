@@ -25,6 +25,7 @@
         <module>vkafka</module>
         <module>vzookeeper</module>
         <module>reporter</module>
+        <module>pearls</module>
     </modules>
 
     <dependencies>
