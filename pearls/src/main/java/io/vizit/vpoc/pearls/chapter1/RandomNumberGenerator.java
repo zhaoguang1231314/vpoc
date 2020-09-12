@@ -18,6 +18,9 @@ public class RandomNumberGenerator {
 
         List<Integer> integers = new ArrayList<>(N);
         for (int i = MIN; i <= MAX; i++) {
+            if (integers.size() > 100) {
+                break;
+            }
             integers.add(i);
         }
         Collections.shuffle(integers);
