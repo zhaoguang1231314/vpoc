@@ -26,3 +26,4 @@ hs_err_pid*
 target/
 
 *-checkpoint.ipynb
+.DS_Store

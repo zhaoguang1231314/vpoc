@@ -26,6 +26,7 @@
         <module>vzookeeper</module>
         <module>reporter</module>
         <module>pearls</module>
+        <module>valgorithm</module>
     </modules>
 
     <dependencies>
